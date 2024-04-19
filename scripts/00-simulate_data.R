@@ -10,11 +10,25 @@
 
 #### Workspace setup ####
 # package installations
+install.packages("tidyverse")
+install.packages("tibble")
+install.packages("rstanarm")
+install.packages("arrow")
+install.packages("dplyr")
+install.packages("janitor")
+install.packages("haven")
 install.packages("readxl")
 
 # loading packages
 library(tidyverse)
 library(tibble)
+library(rstanarm)
+library(arrow)
+library(dplyr)
+library(janitor)
+library(haven)
+library(readxl)
+
 
 # Simulate McDonald's menu dataframe
 mcd_menu <- tibble(
