@@ -1,15 +1,14 @@
 #### Preamble ####
-# Purpose: Downloads and saves the data from [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Downloads and saves the data from MenuStat.org and fdc.nal.usda.gov
+# Author: Aamishi Avarsekar
+# Date: 18 April 2024
+# Contact: aamishi.avarsekar@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: run 00-simulate_data.R to install needed packages
+# Any other information needed?
 
 
 #### Workspace setup ####
-install.packages("readxl")
 library(tidyverse)
 library(janitor)
 library(haven)
@@ -17,65 +16,39 @@ library(arrow)
 library(readxl)
 
 
+################################################################################
+# McDonald's data from MenuStat.org
 # the raw data must be downloaded and stored in the file ./data/raw_data
+# Please download the MenuStat: BRESTAURANT NUTRITION DATASETS (20222 Annual Data)
+# from https://www.menustat.org/uploads/1/4/1/6/141624194/ms_annual_data_2022.xlsx
+# and save it in ./data/raw_data/
+################################################################################
 
-all_brands <- read_excel("./data/raw_data/ms_annual_data_2022.xlsx")
-unique_restaurants <- unique(all_brands$restaurant)
-mcdonalds_items <- all_brands[all_brands$restaurant == "McDonald's", ]
-# [...UPDATE THIS...]
-
-#### Download data ####
-# [...ADD CODE HERE TO DOWNLOAD...]
-
-
-
-#### Save data ####
-# [...UPDATE THIS...]
-# change the_raw_data to whatever name you assigned when you downloaded it.
-write_csv(mcdonalds_items, "./data/analysis_data/mcdonalds_menu.csv") 
-
-         
+# load raw data
+all_brands_food_data_mcdonalds <- read_excel("./data/raw_data/ms_annual_data_2022.xlsx")
+# Convert to parquet
+write_parquet(all_brands_food_data_mcdonalds, "./data/analysis_data/mcdonalds_menu.parquet") 
 
 
 ################################################################################
 # ALL NUTRITIONAL DATA
+# the raw data must be downloaded and stored in the file ./data/raw_data
+# Please download the FoodData: Branded Foods data April(2024) 
+# from https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_branded_food_csv_2024-04-18.zip
+# and extract the data to ./data/raw_data/
 ################################################################################
-all_foods <- read.csv("./data/raw_data/branded_food.csv")
+
+# load
+portion_sizes <- read.csv("./data/raw_data/food_portion.csv")
+#all_foods <- read.csv("./data/raw_data/branded_food.csv")
 food_nutrients <- read.csv("./data/raw_data/food_nutrient.csv")
 nutrients_names <- read.csv("./data/raw_data/nutrient.csv")
 food_id_names <- read.csv("./data/raw_data/food.csv")
-  
-################################################################################
-# smaller
-################################################################################
-portion_sizes <- read.csv("./data/raw_data/smaller/food_portion.csv")
-food_nutrients_smaller <- read.csv("./data/raw_data/smaller/food_nutrient.csv")
-nutrients_names_smaller <- read.csv("./data/raw_data/smaller/nutrient.csv")
-food_id_names_smaller <- read.csv("./data/raw_data/smaller/food.csv")
 
-
-################################################################################
-# Convert to .CSV
-################################################################################
-write_csv(all_foods, "./data/analysis_data/all_foods.csv") 
-write_csv(food_nutrients, "./data/analysis_data/food_nutrients.csv") 
-write_csv(nutrients_names, "./data/analysis_data/nutrients_names.csv") 
-write_csv(food_id_names, "./data/analysis_data/food_id_names.csv") 
-
-################################################################################
-# smaller
-################################################################################
-write_csv(portion_sizes, "./data/analysis_data/smaller/portion_sizes.csv") 
-write_csv(food_nutrients_smaller, "./data/analysis_data/smaller/food_nutrients.csv") 
-write_csv(nutrients_names_smaller, "./data/analysis_data/smaller/nutrients_names.csv") 
-write_csv(food_id_names_smaller, "./data/analysis_data/smaller/food_id_names.csv") 
-
-
-
-
-
-
-
-
-
+# Convert to parquet
+write_parquet(portion_sizes, "./data/analysis_data/portion_sizes.parquet") 
+#write_parquet(all_foods, "./data/analysis_data/all_foods.parquet") 
+write_parquet(food_nutrients, "./data/analysis_data/food_nutrients.parquet") 
+write_parquet(nutrients_names, "./data/analysis_data/nutrients_names.parquet") 
+write_parquet(food_id_names, "./data/analysis_data/food_id_names.parquet") 
 
