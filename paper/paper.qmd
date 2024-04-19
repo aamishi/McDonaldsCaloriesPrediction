@@ -34,25 +34,22 @@ mcd <- read_parquet("../data/analysis_data/mcd_analysis_data.parquet")
 
 # Introduction
 
-With the boom of fast-food restaurants in the USA, it has become easier for people to purchase more food at a lesser cost. Food insecure households and people with low incomes {} rely on cheap fast-food options to feed their families as compared to grocery shopping for fresh foods and preparing meals at home. More often than not, the main consumers of these fast-food restaurants are more concerned with having filling meal over a nutritious meal. While the menu items in places such as food-food restaurants such McDonald’s may provide cheap food options for the quantity of the food they provide, we should also concern ourselves with their claimed nutrition values.
+With the boom of fast-food restaurants in the USA, it has become easier for people to purchase more food at a lesser cost. Food insecure households and people with low incomes rely on cheap fast-food options to feed their families as compared to grocery shopping for fresh foods and preparing meals at home. More often than not, the main consumers of these fast-food restaurants are more concerned with having filling meal over a nutritious meal. While the menu items in places such as food-food restaurants such McDonald’s may provide cheap food options for the quantity of the food they provide, we should also concern ourselves with their claimed nutrition values.
 
 Customers rely on these facts that are provided by the companies themselves and it is virtually impossible to find out how many calories a small packet of potato fries actually has. People can watch what they eat for several reasons including general health reasons, personal body building goals or tracking their energy intake from different food groups. 
 
-The motivation behind this paper is to see if the fast-food company McDonald’s’ menu items’ calories are accurate to help people take informed decision about their nutrition. The selling point of fast-food restaurants is their cheap prices, so people often tend to overlook their nutritional packing and average caloric value. With the chronic increase of fast-food availability, 
-{3 mcds on the same street example}, people may not realize how easy it is to overeat these foods. On the other hand, calorie restricting persons such as body builders prepping for a competition or people suffering from eating disorders, can also gain a sense of confidence in the nutritional values of the foods the company provides.
+The motivation behind this paper is to see if the fast-food company McDonald’s’ menu items’ calories are accurate to help people take informed decision about their nutrition. The selling point of fast-food restaurants is their cheap prices, so people often tend to overlook their nutritional packing and average caloric value. With the chronic increase of fast-food availability, people may not realize how easy it is to overeat these foods. On the other hand, calorie restricting persons such as body builders prepping for a competition or people suffering from eating disorders, can also gain a sense of confidence in the nutritional values of the foods the company provides.
 
-@citeR
-
-The remainder of this paper is structured as follows. @sec-data....
+I built a linear model using the amount of protein, carbohydrates, fat, fiber, sugar, sodium and cholesterol as predictors to estimate the number of calories in the menu items. I trained this model on the general foods nutrition data and then applied it to the McDonalds’ menu items to verify the accuracy of their claimed calories. The R Programming Language (@citeR) was used to obtain and clean the necessary datasets and create the model.
 
 
 
 # Data {#sec-data}
 
 
-## U.S. Department of Agriculture (USDA) (Legacy Food Data):
+## U.S. Department of Agriculture (USDA) (Legacy Food Data) (@USDA):
 
-The U.S. Department of Agriculture (USDA) (@USDA) maintains a food database of all foods that are available for Americans to consume. This database includes a comprehensive list of nutritional values of foods of different origins. The main sources categories include foundational foods which comprise of whole foods with no processing such as fruits, vegetables and meat. The National Health and Nutrition Examination Survey (NHANES) of America records an extensive survey of people and their average diets, caloric consumption, macro-nutrient consumption and other health vitals like cardiovascular health. The food obtained from this survey is recorded in USDA’s Food and Nutrient Database for Dietary Studies. However, the dataset of my interest was the Legacy food data collection. This dataset compromises the values of my predictors of interest from foods that have been collected through decades worth of research, published literature, and both private and public food composition databases. Although retired in 2018, this dataset was most apt for my paper because it contains cumulative data of private and public food sources which also includes fast food companies. This would help train the linear model better, as discussed in {}, as it also represents the type of fast foods that we are interested in. The trade-off here in the lack of information after 2018, as this database was transitioned to be maintained with the foundational and branded foods database respectively. However, for the purposes of training this model, the data size was at a much more handleable size, with the biggest file being around 36.4MB as compared to the biggest file of the branded food dataset with a size of 1.73GB.
+The U.S. Department of Agriculture (USDA) (@USDA) maintains a food database of all foods that are available for Americans to consume. This database includes a comprehensive list of nutritional values of foods of different origins. The main sources categories include foundational foods which comprise of whole foods with no processing such as fruits, vegetables and meat. The National Health and Nutrition Examination Survey (NHANES) of America records an extensive survey of people and their average diets, caloric consumption, macro-nutrient consumption and other health vitals like cardiovascular health. The food obtained from this survey is recorded in USDA’s Food and Nutrient Database for Dietary Studies. However, the dataset of my interest was the Legacy food data collection. This dataset compromises the values of my predictors of interest from foods that have been collected through decades worth of research, published literature, and both private and public food composition databases. Although retired in 2018, this dataset was most apt for my paper because it contains cumulative data of private and public food sources which also includes fast food companies. This would help train the linear model better, as it also represents the type of fast foods that we are interested in. The trade-off here in the lack of information after 2018, as this database was transitioned to be maintained with the foundational and branded foods database respectively. However, for the purposes of training this model, the data size was at a much more handleable size, with the biggest file being around 36.4MB as compared to the biggest file of the branded food dataset with a size of 1.73GB.
 
 For training the model, I selected the variables `calories, gram_weight, protein, carbs, fats, fiber, sugar, sodium, cholesterol`. The serving size in grams of each food item was extracted and then inner joined with the nutritional data against the food_id variable. The following table is quick look at the USDA Legacy food data after it was cleaned and merged to produce appropriate variables.
 
@@ -67,7 +64,7 @@ kable(head(all_foods), caption = "Nutritional Value of Foods According to USDA")
 
 ```
 
-## MenuStat.org’s McDonalds Data:
+## MenuStat.org’s McDonalds Data (@MenuStat):
 Similarly, the nutritional information of menu items at a typical McDonalds’ in the USA was obtained from MenuStat. MenuStat maintains a free nutrition database of foods that are found in America’s top 100 largest chain restaurants. This database is updated annually and made available to the public via download. The website manually collects nutritional information that are made available through different media like rest websites and applications. Any missing information is supplemented for using other formats of nutritional facts such as nutritional tables. A possible shortcoming of this website is that it does not have the nutritional information of every food item that could be available on the website. This website does not claim for the accuracy of these values. It simply provides a single public source of nutritional facts that are provided by the respective rests. 
 
 For this paper, I will be using the 2022 version of this data. The data is provided as an excel sheet in the `.xlsx` format. From this data, I was interested in similar variables as the general foods nutritional data to use to test the model. I extracted the following variables after filtering for McDonald’s in the ‘restaurants’ column.
@@ -79,8 +76,6 @@ For this paper, I will be using the 2022 version of this data. The data is provi
 #| echo: false
 
 kable(head(mcd), caption = "Nutritional Value of McDonald's According to MenuStat")
-
-
 ```
 
 To understand what the values look like, we can take a look at the calories for some of the menu items:
@@ -94,134 +89,60 @@ melted_data <- melt(smaller_mcd[, c("calories")])
 ggplot(melted_data, aes(x = variable, y = smaller_mcd$food_name, fill = value)) +
   geom_tile() +
   scale_fill_gradient(low = "white", high = "blue")
-kable(head(mcd), caption = "Nutritional Value of McDonald's According to MenuStat")
-
-
 ```
+
+## Data Measurement and Limitations:
+The primary variable of interest in the number of calories in food. This value is measured in KCals which is the amount of energy that is required to raise the temperature of water by one degree Celsius. The rest of the variables are measured in grams. These values are then compiled over several foods to produce the database.
+
+The USDA data on food nutrition is a compilation of scientific research and publications. The McDonald’s data from MenuStat.org is also simply a compilation of the nutritional facts found on the company’s websites and applications. The accuracy of this data is not guaranteed by the websites that maintain it.
 
 
 
 # Model
 
-The goal of our modelling strategy is twofold. Firstly,...
-
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
+The goal of this model is to use the USDA Legacy food data as training data to establish a linear relationship with calories and other independent variables like protein, carbohydrates, fats, sugar, sodium and cholesterol. This model is generated using the R programming language’s (@citeR) `lm()` function. 
 
 ## Model set-up
 
 Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
+The model used to estimate the calories in McDonalds’ menu items is represented by the following equation:
 
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
 
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
+$$
+\begin{aligned}
+\text{calories} = \beta_0 &+ \beta_1 \cdot \text{gram weight} \\
+&+ \beta_2 \cdot \text{protein} \\
+&+ \beta_3 \cdot \text{carbohydrates} \\
+&+ \beta_3 \cdot \text{fats} \\
+&+ \beta_4 \cdot \text{fiber} \\
+&+ \beta_5 \cdot \text{sugar} \\
+&+ \beta_6 \cdot \text{sodium} \\
+&+ \beta_7 \cdot \text{cholesterol} + \epsilon
+\end{aligned}
+$$
+
+Here,
+
+-	calories: is the dependent variable that we want to predict for McDonald’s menu based on USDA’s Legacy Food data.
+-	`gram_weight, protein, carbohydrates, fats, fiber, sugar, sodium, cholesterol` are the independent variables of the model
+
 
 
 ### Model justification
 
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
+The model choice for estimation is the number of calories found in McDonald’s fast food because it is an area of growing concern regarding a person’s general health. Despite the size or quantity of the food that a person may be able to purchase, there is no way they can estimate the number of calories the food has. Training our data on decades old data ensures that all food types, their quantity and nutritional values has been captured. A known discussion in the body building community of finding foods that are low in calories, high in protein and low in fats and carbohydrates, goes to show that the quantity of food has no direct relationship with the number of calories that it has. We must instead rely on the calories that are derived from different nutrient types.
 
 
 # Results
 
-Our results are summarized in @tbl-modelresults.
-
-```{r}
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-```
-
-```{r}
-#| echo: false
-#| eval: true
-#| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
-#| warning: false
-
-
-```
-
-
-
-
 # Discussion
 
-## First discussion point {#sec-first-point}
-
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
-
-## Second discussion point
-
-## Third discussion point
-
 ## Weaknesses and next steps
+
 
 Weaknesses and next steps should also be included.
 
 \newpage
-
-\appendix
-
-# Appendix {-}
-
-
-# Additional data details
-
-# Model details {#sec-model-details}
-
-## Posterior predictive check
-
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
-
-```{r}
-#| eval: true
-#| echo: false
-#| message: false
-#| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
-
-
-```
-
-## Diagnostics
-
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
-
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
-
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-#| label: fig-stanareyouokay
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
-#| fig-subcap: ["Trace plot", "Rhat plot"]
-#| layout-ncol: 2
-
-
-```
-
-
-
-\newpage
-
 
 # References
 

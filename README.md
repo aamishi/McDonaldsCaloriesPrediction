@@ -2,14 +2,14 @@
 
 ## Overview
 
-This repo provides students with a foundation for their own projects associated with *Telling Stories with Data*. You do not need every aspect for every paper and you should delete aspects that you do not need.
+The vast availability of fast-food could lead to compromised health due to cheap prices. This paper analyses food nutrition and estimates the calories in McDonald’s menu items using a linear model. It is found that these values are close to what the company claims. This accuracy can help customers make informed decisions about their health.
 
 
 ## File Structure
 
 The repo is structured as:
 
--   `data/raw_data` contains the raw data as obtained from X.
+-   `data/raw_data` contains the raw data as obtained from USDA and MenuStat.org.
 -   `data/analysis_data` contains the cleaned dataset that was constructed.
 -   `model` contains fitted models. 
 -   `other` contains relevant literature, details about LLM chat interactions, and sketches.
